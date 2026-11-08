@@ -2,10 +2,12 @@
 
 Qué se revisa en seguridad antes de cada release de ActivoGo.
 
-- [ ] Sin tráfico HTTP en claro en producción: `usesCleartextTraffic="false"` en
+- [x] Sin tráfico HTTP en claro en producción: `usesCleartextTraffic="false"` en
       `mobile/android/app/src/main/AndroidManifest.xml`; el texto plano (`http://10.0.2.2:3000`)
-      solo existe en `mobile/android/app/src/debug/AndroidManifest.xml`.
-- [ ] `allowBackup="false"` en el manifiesto de producción.
+      solo existe en `mobile/android/app/src/debug/AndroidManifest.xml`. Verificado
+      manualmente: el APK de release firmado rechaza la conexión a la API de desarrollo en
+      HTTP con "Sin conexión", mientras el build debug sí se conecta.
+- [x] `allowBackup="false"` en el manifiesto de producción.
 - [ ] Tokens solo en `@aparajita/capacitor-secure-storage`; `git grep -rn "localStorage\|Preferences" mobile/src/features` no debe mostrar uso para tokens.
 - [ ] Sin secretos en el repositorio (ver [reglas de seguridad](../00-gobierno/reglas-de-seguridad.md));
       `git log --all -- "*.jks" "*.keystore" "keystore.properties"` vacío.
