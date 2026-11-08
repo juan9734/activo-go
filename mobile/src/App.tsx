@@ -1,8 +1,8 @@
-import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
+import { IonApp, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { Navigate, Route } from 'react-router-dom';
-
-import Home from './pages/Home';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { SesionProvider } from './core/sesion/SesionContext';
+import { AppRoutes } from './app/routes';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -36,15 +36,18 @@ import './theme/variables.css';
 
 setupIonicReact();
 
+const queryClient = new QueryClient();
+
 const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonRouterOutlet>
-        <Route path="/home" element={<Home />} />
-        <Route path="/" element={<Navigate to="/home" replace />} />
-      </IonRouterOutlet>
-    </IonReactRouter>
-  </IonApp>
+  <QueryClientProvider client={queryClient}>
+    <SesionProvider>
+      <IonApp>
+        <IonReactRouter>
+          <AppRoutes />
+        </IonReactRouter>
+      </IonApp>
+    </SesionProvider>
+  </QueryClientProvider>
 );
 
 export default App;
