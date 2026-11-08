@@ -1,34 +1,53 @@
 # Estructura del proyecto
 
-> Monorepo: `api/` (backend) y `mobile/` (app Ionic + Angular + Capacitor). Árbol real de
-> `mobile/src/app` y sus reglas. Dónde va el código de una feature nueva.
+Monorepo: `api/` (backend) y `mobile/` (app Ionic React + Capacitor). Árbol real de
+`mobile/src` y sus reglas. Dónde va el código de una feature nueva.
 
 ~~~text
 activo-go/
-├── api/                         backend (ver docs/03-api-y-datos/ para sus endpoints)
+├── api/                          Node + Express 5 + TypeScript + Prisma 7 + PostgreSQL
+│   ├── prisma/                   schema.prisma y migraciones
+│   └── src/
+│       ├── routes/
+│       ├── controllers/
+│       ├── services/
+│       ├── repositories/
+│       ├── middlewares/
+│       └── schemas/              validación con Zod
 └── mobile/
-    ├── android/                 proyecto nativo Android (sí se versiona; la llave de firma no)
-    └── src/app/
-        ├── core/                       transversal a todas las features
-        │   ├── di/                     providers y tokens de inyección (raíz de composición)
-        │   ├── network/                cliente HTTP único e interceptores (token y refresh, timeout, errores)
-        │   ├── storage/                puertos y adaptadores: almacenamiento seguro y caché local
-        │   ├── nativo/                 puertos de capacidades nativas y sus adaptadores Capacitor
-        │   └── theme/                  tokens de diseño (o mobile/src/theme/variables.scss)
+    ├── android/                  proyecto nativo Android (sí se versiona; la llave de firma no)
+    └── src/
+        ├── core/                        transversal a todas las features
+        │   ├── di/                      raíz de composición: contexto de React con las implementaciones concretas
+        │   ├── network/                 cliente Axios único e interceptores (correlation-id, auth, refresh, timeout, errores)
+        │   ├── storage/                 puertos y adaptadores: almacenamiento seguro y caché local (SQLite cifrada)
+        │   ├── nativo/                  puertos de capacidades nativas (cámara, escáner QR) y sus adaptadores Capacitor
+        │   └── theme/                   tokens de diseño (variables.css)
         ├── features/
-        │   └── <feature>/              kebab-case: registro-activos/
-        │       ├── presentation/       páginas, componentes propios y ViewModel (state holder)
-        │       ├── domain/             entidades, casos de uso e interfaces de repositorio
-        │       └── data/                repositorios, DTO, mappers y fuentes remota y local
-        ├── shared/                     componentes de UI reutilizables, sin lógica de negocio
-        ├── app.routes.ts               tabla de rutas central y guards
-        └── app.config.ts               providers raíz: router, HttpClient con interceptores
+        │   ├── auth/                    login, refresh, logout, bloqueo por intentos fallidos
+        │   ├── activos/                 alta, edición, estado, foto, asignaciones, exportación CSV
+        │   └── tomas-fisicas/           crear toma, escanear lecturas, cerrar y calcular resultado
+        │       └── <feature>/
+        │           ├── presentation/    páginas, componentes propios y hook ViewModel por pantalla
+        │           ├── domain/          entidades, casos de uso e interfaces de repositorio (TypeScript puro)
+        │           └── data/            repositorios, DTO, mappers y fuentes remota y local
+        ├── shared/                      componentes de UI reutilizables, sin lógica de negocio
+        ├── testing/                     dobles de prueba escritos a mano (sin vi.fn ni mocks automáticos)
+        └── app/
+            ├── routes.tsx                tabla de rutas central y guards
+            └── App.tsx                   providers raíz (contexto de DI, React Router)
 ~~~
 
 ## Reglas que el árbol debe cumplir
 
 - Una feature = una carpeta en `features/`. Ninguna feature importa de otra: lo común va a
   `core/` o a `shared/`.
-- `domain/` no importa nada de Angular, de `HttpClient` ni de Capacitor.
-- `presentation/` habla con `domain/` (casos de uso o interfaces), nunca con `data/`.
-- Los plugins de Capacitor solo se importan dentro de un adaptador.
+- `domain/` es TypeScript puro: no importa React, Ionic, Axios ni Capacitor.
+- `presentation/` usa solo casos de uso de `domain/` mediante hooks ViewModel; nunca llama a
+  `data/` ni a `HttpClient`/Axios directamente.
+- Solo `core/di/` conoce las implementaciones concretas (qué repositorio HTTP, qué adaptador
+  de storage) y las inyecta vía contexto de React.
+- Los plugins de Capacitor (cámara, escáner QR) solo se importan dentro de los adaptadores de
+  `core/nativo/`, detrás de un puerto (interfaz).
+- La regla de capas se verifica con ESLint (`no-restricted-imports`): un `import axios` dentro
+  de `domain/` debe hacer fallar `npm run lint`.
