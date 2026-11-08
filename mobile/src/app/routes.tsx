@@ -5,6 +5,7 @@ import { useSesion } from '../core/sesion/SesionContext';
 import LoginPage from '../features/auth/presentation/LoginPage';
 import ListaActivosPage from '../features/activos/presentation/ListaActivosPage';
 import CapturaFotoPage from '../features/activos/presentation/CapturaFotoPage';
+import FormularioActivoPage from '../features/activos/presentation/FormularioActivoPage';
 
 function AuthGuard({ children }: { children: ReactNode }) {
   const { usuario, cargandoInicial } = useSesion();
@@ -23,6 +24,14 @@ export function AppRoutes() {
         element={
           <AuthGuard>
             <ListaActivosPage />
+          </AuthGuard>
+        }
+      />
+      <Route
+        path="/activos/nuevo"
+        element={
+          <AuthGuard>
+            <FormularioActivoPage />
           </AuthGuard>
         }
       />

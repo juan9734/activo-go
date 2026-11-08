@@ -14,7 +14,11 @@ import {
   IonText,
   IonRefresher,
   IonRefresherContent,
+  IonFab,
+  IonFabButton,
+  IonIcon,
 } from '@ionic/react';
+import { add } from 'ionicons/icons';
 import { useNavigate } from 'react-router-dom';
 import { useListaActivosViewModel } from './use-lista-activos-view-model';
 import { useSesion } from '../../../core/sesion/SesionContext';
@@ -74,7 +78,7 @@ export default function ListaActivosPage() {
 
         {fase === 'vacio' && (
           <IonText className="ion-padding">
-            <p>Aún no hay activos.</p>
+            <p>Aún no hay activos.{usuario?.rol === 'ADMIN' ? ' Toca "+" para registrar el primero.' : ''}</p>
           </IonText>
         )}
 
@@ -92,6 +96,14 @@ export default function ListaActivosPage() {
               </IonItem>
             ))}
           </IonList>
+        )}
+
+        {usuario?.rol === 'ADMIN' && (
+          <IonFab vertical="bottom" horizontal="end" slot="fixed">
+            <IonFabButton onClick={() => navigate('/activos/nuevo')} aria-label="Registrar nuevo activo">
+              <IonIcon icon={add} />
+            </IonFabButton>
+          </IonFab>
         )}
       </IonContent>
     </IonPage>
