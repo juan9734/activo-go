@@ -1,0 +1,27 @@
+node_modules/
+dist/
+build/
+coverage/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+
+# API
+api/uploads/
+api/src/generated/
+
+# Mobile / Android
+mobile/android/app/build/
+mobile/android/.gradle/
+mobile/android/local.properties
+mobile/android/keystore.properties
+mobile/www/
+
+# Firma y artefactos: NUNCA se versionan
+*.jks
+*.keystore
+keystore.properties
+*.aab
+*.apk
