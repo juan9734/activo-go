@@ -2,7 +2,7 @@
 
 | # | Título | Estado | Fecha |
 |---|--------|--------|-------|
-| ADR-001 | Patrón de estado | Propuesto | [AAAA-MM-DD] |
+| ADR-001 | [Patrón de estado](registros/ADR-001-patron-de-estado.md) | Aceptado | 2026-11-08 |
 
 > Plantilla: [_plantilla-adr.md](_plantilla-adr.md) → copiar a `registros/ADR-NNN-titulo-corto.md`.
 >

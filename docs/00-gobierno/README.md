@@ -6,14 +6,16 @@ Cómo la pareja planea, estima y cierra el trabajo; quién hace qué.
 
 | Integrante | Rol / foco |
 |---|---|
-| [nombre] | [p. ej. arquitectura y backend] |
-| [nombre] | [p. ej. UI y pruebas] |
+| Juan Diego Ninco Collazos | Trabajo individual: arquitectura, API, app móvil, pruebas y release. Autorrevisión documentada en cada PR (confirmado por escrito con el tutor; el curso está diseñado para parejas). |
 
 ## Ceremonias
 
-- **Planning:** [cuándo y cómo se planea el sprint]
-- **Seguimiento:** [diario/async, canal]
-- **Review:** [cómo se revisa el incremento]
+- **Planning:** al inicio de cada hito (H1 a H3), se revisa el backlog y se prioriza lo que
+  entra a ese hito según los ocho mínimos del curso.
+- **Seguimiento:** diario, en el historial de commits y en `docs/` (SDD: el commit `docs`
+  antes del `feat` es el registro de avance).
+- **Review:** autorrevisión documentada en la descripción de cada PR antes de hacer *squash
+  merge* a `main`, dado el trabajo individual confirmado con el tutor.
 - **Retro:** una por sprint, como mínimo al cerrar cada hito (H1, H2, H3) — ver [retros/](retros/)
 
 ## Estimación
