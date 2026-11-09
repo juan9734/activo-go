@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import {
   IonContent,
   IonHeader,
@@ -10,11 +9,15 @@ import {
   IonText,
   IonSpinner,
 } from '@ionic/react';
+import type { ReactElement } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useLoginViewModel } from './use-login-view-model';
+
 import { useSesion } from '../../../core/sesion/SesionContext';
 
-export default function LoginPage() {
+import { useLoginViewModel } from './use-login-view-model';
+
+export default function LoginPage(): ReactElement {
   const [email, setEmail] = useState('admin@activogo.co');
   const [password, setPassword] = useState('');
   const { fase, mensajeError, enviar } = useLoginViewModel();

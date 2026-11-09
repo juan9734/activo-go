@@ -1,4 +1,5 @@
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+
 import type { CapturaFoto, ErrorPermiso } from './camara.port';
 
 export class CamaraCapacitorAdapter implements CapturaFoto {
@@ -10,7 +11,7 @@ export class CamaraCapacitorAdapter implements CapturaFoto {
         quality: 80,
       });
       return foto.dataUrl ?? '';
-    } catch (err) {
+    } catch {
       const error = new Error('No se pudo acceder a la cámara') as ErrorPermiso;
       error.tipo = 'permiso-denegado';
       throw error;

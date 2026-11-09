@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
   IonContent,
   IonHeader,
@@ -11,12 +10,15 @@ import {
   IonText,
   IonSpinner,
 } from '@ionic/react';
+import type { ReactElement } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import { escanerQr, activosRepository } from '../../../core/di/composicion';
 
 type Fase = 'vacio' | 'escaneando' | 'no-encontrado' | 'error' | 'permiso-denegado';
 
-export default function EscanearQrPage() {
+export default function EscanearQrPage(): ReactElement {
   const navigate = useNavigate();
   const [fase, setFase] = useState<Fase>('vacio');
   const [codigoNoEncontrado, setCodigoNoEncontrado] = useState('');

@@ -1,8 +1,9 @@
 import { IonApp, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { SesionProvider } from './core/sesion/SesionContext';
+
 import { AppRoutes } from './app/routes';
+import { SesionProvider } from './core/sesion/SesionContext';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';

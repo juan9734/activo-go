@@ -1,10 +1,17 @@
 import { useState } from 'react';
+
+import { esErrorSinConexion, estadoHttp } from '../../../core/errores/errores-http';
 import { useSesion } from '../../../core/sesion/SesionContext';
-import axios from 'axios';
 
 export type FaseLogin = 'inactivo' | 'enviando' | 'error' | 'bloqueado';
 
-export function useLoginViewModel() {
+export interface LoginViewModel {
+  fase: FaseLogin;
+  mensajeError: string | null;
+  enviar: (email: string, password: string) => Promise<void>;
+}
+
+export function useLoginViewModel(): LoginViewModel {
   const { iniciarSesion } = useSesion();
   const [fase, setFase] = useState<FaseLogin>('inactivo');
   const [mensajeError, setMensajeError] = useState<string | null>(null);
@@ -16,10 +23,10 @@ export function useLoginViewModel() {
       await iniciarSesion(email, password);
       setFase('inactivo');
     } catch (err) {
-      if (axios.isAxiosError(err) && err.response?.status === 423) {
+      if (estadoHttp(err) === 423) {
         setFase('bloqueado');
         setMensajeError('Cuenta bloqueada temporalmente, intenta más tarde');
-      } else if (axios.isAxiosError(err) && !err.response) {
+      } else if (esErrorSinConexion(err)) {
         setFase('error');
         setMensajeError('Sin conexión, intenta de nuevo');
       } else {

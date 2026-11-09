@@ -15,3 +15,14 @@ Dónde vive la llave de ActivoGo y cómo se firma el artefacto.
 - **Versión mínima soportada:** API level 24 (Android 7.0), la mínima que soporta Capacitor 8.
 - **iOS:** documentado como simulado (sin cuenta de desarrollador Apple disponible para el
   curso); no se declara como hecho.
+
+## API en el build de release
+
+- El manifiesto de release lleva `usesCleartextTraffic="false"` y `allowBackup="false"`; el
+  texto plano solo existe en `mobile/android/app/src/debug/AndroidManifest.xml`.
+- `capacitor.config.ts` deja `allowMixedContent: true` solo en desarrollo: al sincronizar con
+  `ACTIVOGO_RELEASE=1 npx cap sync android` queda en `false`.
+- La app de release llama a la API por HTTPS (`VITE_API_URL` en `mobile/.env.production`, que no
+  se versiona). Como la API se ejecuta solo en local, para las pruebas de release se expone con
+  un túnel HTTPS (`cloudflared tunnel --url http://localhost:3000`). **Es una solución de
+  prueba, no un despliegue de producción**: la URL cambia cada vez que se reinicia el túnel.

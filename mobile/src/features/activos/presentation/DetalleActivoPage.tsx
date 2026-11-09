@@ -16,8 +16,10 @@ import {
   IonSpinner,
   IonText,
 } from '@ionic/react';
-import { useParams, useNavigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import type { ReactElement } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+
 import { activosRepository } from '../../../core/di/composicion';
 import { useSesion } from '../../../core/sesion/SesionContext';
 import type { EstadoActivo } from '../domain/activo';
@@ -35,13 +37,17 @@ const TRANSICIONES_VALIDAS: Record<EstadoActivo, EstadoActivo[]> = {
   BAJA: [],
 };
 
-export default function DetalleActivoPage() {
+export default function DetalleActivoPage(): ReactElement {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { usuario } = useSesion();
   const queryClient = useQueryClient();
 
-  const { data: activo, isLoading, isError } = useQuery({
+  const {
+    data: activo,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ['activos', id],
     queryFn: () => activosRepository.obtener(id as string),
   });

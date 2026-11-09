@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
   IonContent,
   IonHeader,
@@ -12,13 +11,16 @@ import {
   IonText,
   IonSpinner,
 } from '@ionic/react';
-import { useParams, useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import type { ReactElement } from 'react';
+import { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+
 import { capturaFoto, activosRepository } from '../../../core/di/composicion';
 
 type Fase = 'vacio' | 'cargando' | 'cargado' | 'error' | 'permiso-denegado';
 
-export default function CapturaFotoPage() {
+export default function CapturaFotoPage(): ReactElement {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const queryClient = useQueryClient();

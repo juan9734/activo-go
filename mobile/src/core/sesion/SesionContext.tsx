@@ -1,7 +1,8 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
-import { tokenStore } from '../storage/token-store';
-import { sesionRepository } from '../di/composicion';
+import { createContext, useContext, useEffect, useState, type ReactElement, type ReactNode } from 'react';
+
 import type { Usuario } from '../../features/auth/domain/usuario';
+import { sesionRepository } from '../di/composicion';
+import { tokenStore } from '../storage/token-store';
 
 interface SesionContextValor {
   usuario: Usuario | null;
@@ -12,7 +13,7 @@ interface SesionContextValor {
 
 const SesionContext = createContext<SesionContextValor | null>(null);
 
-export function SesionProvider({ children }: { children: ReactNode }) {
+export function SesionProvider({ children }: { children: ReactNode }): ReactElement {
   const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [cargandoInicial, setCargandoInicial] = useState(true);
 
@@ -44,7 +45,9 @@ export function SesionProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function useSesion() {
+// El hook vive junto al proveedor: es la API pública de este módulo.
+// eslint-disable-next-line react-refresh/only-export-components
+export function useSesion(): SesionContextValor {
   const contexto = useContext(SesionContext);
   if (!contexto) throw new Error('useSesion debe usarse dentro de SesionProvider');
   return contexto;

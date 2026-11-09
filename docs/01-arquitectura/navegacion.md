@@ -1,33 +1,40 @@
 # Navegación
 
-Tabla de rutas (espejo de `mobile/src/app/routes.tsx`) y guards. ActivoGo tiene tres roles:
-**ADMIN** (escribe), **AUDITOR** (opera tomas físicas), **CONSULTA** (solo lee).
+Tabla de rutas (espejo exacto de `mobile/src/app/routes.tsx`) y guard. ActivoGo tiene tres
+roles: **ADMIN** (escribe), **AUDITOR** (opera tomas físicas) y **CONSULTA** (solo lee).
+
+## Rutas implementadas (v1.0.0)
 
 | Ruta | Pantalla | Feature | Guard | Parámetros |
 |------|----------|---------|-------|------------|
 | `/login` | Login | auth | — (pública) | — |
-| `/activos` | Lista de activos | activos | `authGuard` | — |
-| `/activos/nuevo` | Formulario de activo (crear) | activos | `authGuard` + `roleGuard(ADMIN)` | — |
-| `/activos/:id` | Detalle de activo | activos | `authGuard` | `id` |
-| `/activos/:id/editar` | Formulario de activo (editar) | activos | `authGuard` + `roleGuard(ADMIN)` | `id` |
-| `/activos/:id/foto` | Captura de foto del activo | activos | `authGuard` + `roleGuard(ADMIN)` | `id` |
-| `/tomas` | Lista de tomas físicas | tomas-fisicas | `authGuard` + `roleGuard(AUDITOR, ADMIN)` | — |
-| `/tomas/nueva` | Crear toma física | tomas-fisicas | `authGuard` + `roleGuard(AUDITOR, ADMIN)` | — |
-| `/tomas/:id` | Escaneo y registro de lecturas | tomas-fisicas | `authGuard` + `roleGuard(AUDITOR, ADMIN)` | `id` |
-| `/tomas/:id/resultado` | Resultado y cierre de la toma | tomas-fisicas | `authGuard` + `roleGuard(AUDITOR, ADMIN)` | `id` |
-| `/perfil` | Perfil y cerrar sesión | auth | `authGuard` | — |
+| `/activos` | Lista de activos | activos | `AuthGuard` | — |
+| `/activos/nuevo` | Formulario de activo (crear) | activos | `AuthGuard` | — |
+| `/activos/escanear` | Escanear código QR | activos | `AuthGuard` | — |
+| `/activos/:id/editar` | Formulario de activo (editar) | activos | `AuthGuard` | `id` |
+| `/activos/:id/foto` | Captura de foto del activo | activos | `AuthGuard` | `id` |
+| `/activos/:id` | Detalle de activo | activos | `AuthGuard` | `id` |
+| `/` | Redirección a `/activos` | — | — | — |
 
-## Guards
+## Guard
 
-- **`authGuard`:** exige un token de acceso válido en almacenamiento seguro; si no hay
-  sesión (o el refresh falló), redirige a `/login`.
-- **`roleGuard(roles)`:** exige que el usuario autenticado tenga uno de los roles indicados;
-  si no lo tiene, oculta la acción en la interfaz y, si intenta entrar directo a la ruta,
-  redirige a `/activos` con un aviso. La regla se duplica en el API (403), nunca se confía
-  solo en el cliente.
-- **CONSULTA** puede entrar a `/activos` y `/activos/:id` (sin botones de escritura) y a
-  `/perfil`; no tiene acceso a `/tomas*` ni a las rutas de creación/edición de activos.
+- **`AuthGuard`** (definido en `routes.tsx`): si la sesión aún se está resolviendo no pinta
+  nada; si no hay usuario autenticado, redirige a `/login` (`replace`). Toda ruta salvo
+  `/login` pasa por él (mínimo 4).
+- **Roles:** no hay un guard de rol en el cliente. La interfaz oculta las acciones de
+  escritura según `usuario.rol` (por ejemplo, solo ADMIN ve crear, editar, cambiar estado,
+  foto y exportar CSV; ADMIN y AUDITOR ven el escáner) y **la API responde 403** a quien no
+  tenga permiso. La regla se aplica siempre en el servidor; el cliente solo evita mostrar
+  botones que fallarían.
+- **Brecha declarada:** una ruta de escritura abierta de forma directa por un usuario
+  CONSULTA se renderiza, pero cualquier intento de guardar es rechazado por la API.
 
-Toda ruta protegida pasa por `authGuard`; las rutas de escritura además pasan por
-`roleGuard`. La tabla de arriba debe coincidir exactamente con `mobile/src/app/routes.tsx`
-(mínimo 4).
+## Rutas planeadas, no implementadas en v1.0.0
+
+| Ruta | Pantalla | Estado |
+|------|----------|--------|
+| `/tomas`, `/tomas/nueva`, `/tomas/:id`, `/tomas/:id/resultado` | Tomas físicas (HU-10) | Planeadas; ver [tomas-fisicas.md](features/tomas-fisicas.md) |
+| `/perfil` | Perfil y cierre de sesión | Planeada; el cierre de sesión hoy está en la barra de `/activos` |
+
+La tabla de rutas implementadas debe coincidir exactamente con `routes.tsx`; cualquier
+cambio de rutas actualiza este documento en el mismo PR.

@@ -1,13 +1,14 @@
-import { Navigate, Route } from 'react-router-dom';
 import { IonRouterOutlet } from '@ionic/react';
-import type { ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
+import { Navigate, Route } from 'react-router-dom';
+
 import { useSesion } from '../core/sesion/SesionContext';
-import LoginPage from '../features/auth/presentation/LoginPage';
-import ListaActivosPage from '../features/activos/presentation/ListaActivosPage';
-import DetalleActivoPage from '../features/activos/presentation/DetalleActivoPage';
 import CapturaFotoPage from '../features/activos/presentation/CapturaFotoPage';
-import FormularioActivoPage from '../features/activos/presentation/FormularioActivoPage';
+import DetalleActivoPage from '../features/activos/presentation/DetalleActivoPage';
 import EscanearQrPage from '../features/activos/presentation/EscanearQrPage';
+import FormularioActivoPage from '../features/activos/presentation/FormularioActivoPage';
+import ListaActivosPage from '../features/activos/presentation/ListaActivosPage';
+import LoginPage from '../features/auth/presentation/LoginPage';
 
 function AuthGuard({ children }: { children: ReactNode }) {
   const { usuario, cargandoInicial } = useSesion();
@@ -17,7 +18,7 @@ function AuthGuard({ children }: { children: ReactNode }) {
 }
 
 // Tabla de rutas central — debe coincidir con docs/01-arquitectura/navegacion.md
-export function AppRoutes() {
+export function AppRoutes(): ReactElement {
   return (
     <IonRouterOutlet>
       <Route path="/login" element={<LoginPage />} />

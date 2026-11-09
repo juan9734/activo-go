@@ -20,13 +20,14 @@ import {
   IonSpinner,
 } from '@ionic/react';
 import { add } from 'ionicons/icons';
+import type { ReactElement } from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
-import { Share } from '@capacitor/share';
-import { useListaActivosViewModel } from './use-lista-activos-view-model';
+
+import { activosRepository, exportadorCsv } from '../../../core/di/composicion';
 import { useSesion } from '../../../core/sesion/SesionContext';
-import { activosRepository } from '../../../core/di/composicion';
+
+import { useListaActivosViewModel } from './use-lista-activos-view-model';
 
 const COLOR_ESTADO: Record<string, string> = {
   ACTIVO: 'success',
@@ -34,7 +35,7 @@ const COLOR_ESTADO: Record<string, string> = {
   BAJA: 'danger',
 };
 
-export default function ListaActivosPage() {
+export default function ListaActivosPage(): ReactElement {
   const { fase, activos, actualizadoEn } = useListaActivosViewModel();
   const { usuario, cerrarSesion } = useSesion();
   const navigate = useNavigate();
@@ -51,14 +52,7 @@ export default function ListaActivosPage() {
     setExportando(true);
     try {
       const csv = await activosRepository.exportarCsv();
-      const nombreArchivo = 'inventario-activogo.csv';
-      const { uri } = await Filesystem.writeFile({
-        path: nombreArchivo,
-        data: csv,
-        directory: Directory.Cache,
-        encoding: Encoding.UTF8,
-      });
-      await Share.share({ title: nombreArchivo, url: uri, dialogTitle: 'Compartir inventario CSV' });
+      await exportadorCsv.compartir('inventario-activogo.csv', csv);
     } catch {
       setErrorExportar(true);
     } finally {

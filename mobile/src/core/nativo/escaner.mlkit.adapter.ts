@@ -1,4 +1,5 @@
 import { BarcodeScanner, BarcodeFormat } from '@capacitor-mlkit/barcode-scanning';
+
 import type { EscanerQr, ErrorPermiso } from './escaner.port';
 
 export class EscanerQrMlKitAdapter implements EscanerQr {

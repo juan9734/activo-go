@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 import { tokenStore } from '../storage/token-store';
 
 const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://10.0.2.2:3000';
@@ -10,8 +11,7 @@ export const httpClient = axios.create({
 
 // Interceptor: correlation-id
 httpClient.interceptors.request.use((config) => {
-  config.headers['X-Correlation-Id'] =
-    globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`;
+  config.headers['X-Correlation-Id'] = globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`;
   return config;
 });
 
@@ -60,5 +60,5 @@ httpClient.interceptors.response.use(
       }
     }
     return Promise.reject(error);
-  }
+  },
 );

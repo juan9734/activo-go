@@ -1,4 +1,3 @@
-import { useEffect, useRef, useState } from 'react';
 import {
   IonContent,
   IonHeader,
@@ -12,12 +11,15 @@ import {
   IonText,
   IonSpinner,
 } from '@ionic/react';
-import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
-import { activosRepository } from '../../../core/di/composicion';
+import type { ReactElement } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
-export default function FormularioActivoPage() {
+import { activosRepository } from '../../../core/di/composicion';
+import { esErrorSinConexion, estadoHttp } from '../../../core/errores/errores-http';
+
+export default function FormularioActivoPage(): ReactElement {
   const { id } = useParams<{ id: string }>();
   const esEdicion = Boolean(id);
 
@@ -61,9 +63,9 @@ export default function FormularioActivoPage() {
       navigate(esEdicion ? `/activos/${activo.id}` : '/activos', { replace: true });
     },
     onError: (err) => {
-      if (axios.isAxiosError(err) && err.response?.status === 409) {
+      if (estadoHttp(err) === 409) {
         setMensajeError('Ya existe un activo con ese código');
-      } else if (axios.isAxiosError(err) && !err.response) {
+      } else if (esErrorSinConexion(err)) {
         setMensajeError('Necesitas conexión para guardar');
       } else {
         setMensajeError('No se pudo guardar el activo');
