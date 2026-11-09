@@ -1,8 +1,15 @@
 # Feature — Tomas físicas
 
 - **Responsable:** Juan Diego Ninco Collazos
-- **Estado:** Planeada
-- **Historias relacionadas:** HU-09, HU-10
+- **Estado:** Planeada — con una excepción: la parte de HU-09 sobre pedir el permiso de cámara
+  justo en el momento y escanear un código QR está implementada como una pantalla independiente
+  en `mobile/src/features/activos/presentation/EscanearQrPage.tsx` (ruta `/activos/escanear`),
+  usando el mismo plugin previsto aquí (`@capacitor-mlkit/barcode-scanning`). Un QR válido
+  navega al detalle del activo en vez de registrarlo como lectura en una toma, porque el modelo
+  `TomaFisica`/`LecturaToma` de esta ficha (crear toma, registrar lecturas, cerrar con cálculo de
+  encontrados/faltantes/sobrantes) sigue sin implementar — brecha declarada. Ver
+  [v1.0.0.md](../../05-release/releases/v1.0.0.md) y Anexo 1, fotos 15.
+- **Historias relacionadas:** HU-09 (parcial, ver nota de Estado), HU-10
 
 ---
 
@@ -77,7 +84,8 @@ Ver [navegacion.md](../navegacion.md) para la tabla completa de rutas y guards.
 
 | Puerto (interfaz) | Adaptador (plugin Capacitor) | Permiso | Cuándo se pide | Si el usuario lo niega |
 |-------------------|------------------------------|---------|----------------|------------------------|
-| `EscanearCodigo` | `@capacitor-mlkit/barcode-scanning` | Cámara | Al tocar "Escanear" en `/tomas/:id` | Mensaje con acceso a ajustes; puede registrar la lectura escribiendo el código manualmente |
+| `EscanearCodigo` (planeado, para `/tomas/:id`) | `@capacitor-mlkit/barcode-scanning` | Cámara | Al tocar "Escanear" en `/tomas/:id` | Mensaje con acceso a ajustes; puede registrar la lectura escribiendo el código manualmente |
+| `EscanerQr` (hecho, alcance reducido) | `@capacitor-mlkit/barcode-scanning` | Cámara | Al tocar "Escanear código QR" en `/activos/escanear` — verificado en el emulador: la app no había pedido el permiso antes, lo solicita en ese momento y abre el escáner nativo con la cámara en vivo | Mensaje con acceso a ajustes (`EscanearQrPage`, fase `permiso-denegado`) |
 
 ---
 

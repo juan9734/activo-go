@@ -1,8 +1,8 @@
 # Feature — Activos
 
 - **Responsable:** Juan Diego Ninco Collazos
-- **Estado:** MVP implementado y verificado en el emulador — ver [v1.0.0.md](../../05-release/releases/v1.0.0.md). HU-08 a HU-10 quedan como brecha declarada.
-- **Historias relacionadas:** HU-04, HU-05, HU-06, HU-07, HU-08, HU-11, HU-12, HU-13, HU-15, HU-16
+- **Estado:** MVP implementado y verificado en el emulador — ver [v1.0.0.md](../../05-release/releases/v1.0.0.md). HU-08 y HU-10 quedan como brecha declarada; HU-09 está implementada con alcance reducido (ver [tomas-fisicas.md](tomas-fisicas.md)).
+- **Historias relacionadas:** HU-04, HU-05, HU-06, HU-07, HU-08, HU-09 (parcial), HU-11, HU-12, HU-13, HU-15, HU-16
 
 ---
 
@@ -52,6 +52,7 @@ mobile/src/features/activos/
 | Detalle de activo | `/activos/:id` | Ver datos, estado y asignaciones de un activo |
 | Formulario de activo (editar) | `/activos/:id/editar` | Editar datos o cambiar estado |
 | Captura de foto | `/activos/:id/foto` | Tomar y asociar una foto de evidencia |
+| Escanear QR | `/activos/escanear` | Buscar un activo por su código QR sin digitarlo (HU-09, alcance reducido: sin modelo de toma física) |
 
 Ver [navegacion.md](../navegacion.md) para la tabla completa de rutas y guards.
 
@@ -87,6 +88,7 @@ Ver [navegacion.md](../navegacion.md) para la tabla completa de rutas y guards.
 |-------------------|------------------------------|---------|----------------|------------------------|
 | `CapturaFoto` | `@capacitor/camera` | Cámara | Al tocar "Tomar foto" en `/activos/:id/foto` | Mensaje con acceso a ajustes; el activo se guarda sin foto |
 | `ExportarActivosCsv` | `@capacitor/filesystem` + `@capacitor/share` | Ninguno (archivo en el directorio de caché privado de la app, compartido vía `FileProvider`) | Al tocar "CSV" en `/activos`, sin pedir permiso porque no usa almacenamiento externo | No aplica (sin permiso que negar); si falla la escritura o el share, se muestra "No se pudo exportar el CSV" |
+| `EscanerQr` (HU-09, alcance reducido) | `@capacitor-mlkit/barcode-scanning` | Cámara | Al tocar "Escanear código QR" en `/activos/escanear` | Mensaje con acceso a ajustes; fase `permiso-denegado` |
 
 ---
 
