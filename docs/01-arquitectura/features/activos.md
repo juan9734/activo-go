@@ -1,7 +1,7 @@
 # Feature — Activos
 
 - **Responsable:** Juan Diego Ninco Collazos
-- **Estado:** MVP implementado y verificado en el emulador — ver [v1.0.0.md](../../05-release/releases/v1.0.0.md). HU-08 a HU-10, HU-12 y HU-13 quedan como brecha declarada.
+- **Estado:** MVP implementado y verificado en el emulador — ver [v1.0.0.md](../../05-release/releases/v1.0.0.md). HU-08 a HU-10 y HU-12 quedan como brecha declarada.
 - **Historias relacionadas:** HU-04, HU-05, HU-06, HU-07, HU-08, HU-11, HU-12, HU-13, HU-15, HU-16
 
 ---
