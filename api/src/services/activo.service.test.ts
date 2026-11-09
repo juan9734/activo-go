@@ -89,6 +89,56 @@ describe("activoService.cambiarEstado — reglas de transición", () => {
   });
 });
 
+describe("activoService.exportarCsv", () => {
+  it("arma el CSV con encabezados y los campos de cada activo", async () => {
+    repo.listar.mockResolvedValue([
+      {
+        codigo: "ACT-001",
+        nombre: "Portátil Dell",
+        categoria: "Cómputo",
+        ubicacion: "Piso 2",
+        estado: "ACTIVO",
+        responsable: "Juan",
+      },
+    ] as any);
+
+    const csv = await activoService.exportarCsv();
+
+    expect(csv).toBe(
+      "codigo,nombre,categoria,ubicacion,estado,responsable\r\n" +
+        "ACT-001,Portátil Dell,Cómputo,Piso 2,ACTIVO,Juan\r\n"
+    );
+  });
+
+  it("neutraliza campos que empiezan con =, +, - o @ para evitar inyección de fórmulas", async () => {
+    repo.listar.mockResolvedValue([
+      {
+        codigo: "ACT-002",
+        nombre: "=HYPERLINK(\"http://evil\")",
+        categoria: "+SUMA(A1:A9)",
+        ubicacion: "-1+1",
+        estado: "ACTIVO",
+        responsable: "@usuario",
+      },
+    ] as any);
+
+    const csv = await activoService.exportarCsv();
+    const fila = csv.split("\r\n")[1];
+
+    expect(fila).toBe('ACT-002,"\'=HYPERLINK(""http://evil"")",\'+SUMA(A1:A9),\'-1+1,ACTIVO,\'@usuario');
+  });
+
+  it("deja ubicación y responsable vacíos cuando son null", async () => {
+    repo.listar.mockResolvedValue([
+      { codigo: "ACT-003", nombre: "Router", categoria: "Redes", ubicacion: null, estado: "ACTIVO", responsable: null },
+    ] as any);
+
+    const csv = await activoService.exportarCsv();
+
+    expect(csv).toBe("codigo,nombre,categoria,ubicacion,estado,responsable\r\nACT-003,Router,Redes,,ACTIVO,\r\n");
+  });
+});
+
 describe("activoService.actualizar", () => {
   it("actualiza nombre, categoría y ubicación cuando el activo existe", async () => {
     repo.buscarPorId.mockResolvedValue({ id: "1", codigo: "ACT-001" } as any);

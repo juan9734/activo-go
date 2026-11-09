@@ -1,7 +1,7 @@
 # Feature — Activos
 
 - **Responsable:** Juan Diego Ninco Collazos
-- **Estado:** MVP implementado y verificado en el emulador — ver [v1.0.0.md](../../05-release/releases/v1.0.0.md). HU-08 a HU-10 y HU-12 quedan como brecha declarada.
+- **Estado:** MVP implementado y verificado en el emulador — ver [v1.0.0.md](../../05-release/releases/v1.0.0.md). HU-08 a HU-10 quedan como brecha declarada.
 - **Historias relacionadas:** HU-04, HU-05, HU-06, HU-07, HU-08, HU-11, HU-12, HU-13, HU-15, HU-16
 
 ---
@@ -72,8 +72,8 @@ Ver [navegacion.md](../navegacion.md) para la tabla completa de rutas y guards.
   `AsignarActivo`, `ExportarActivosCsv`.
 - **Repositorios:** interfaz `ActivosRepository` en `domain/`; implementación `ActivosHttpRepository` en `data/`.
 - **Endpoints:** `GET/POST /activos`, `GET/PUT /activos/:id`, `PATCH /activos/:id/estado`,
-  `POST /activos/:id/foto`, `POST /activos/:id/asignaciones`,
-  `GET /activos/export.csv` — ver [03-api-y-datos/endpoints/](../../03-api-y-datos/endpoints/).
+  `PATCH /activos/:id/foto`, `GET /activos/export.csv` (hecho), `POST /activos/:id/asignaciones`
+  (brecha) — ver [03-api-y-datos/endpoints/](../../03-api-y-datos/endpoints/).
 - **Persistencia local:** entidad `activos` en caché (SQLite cifrada) — ver
   [03-api-y-datos/entidades/](../../03-api-y-datos/entidades/).
 - **Estrategia sin conexión:** caché de lectura — la lista se muestra desde SQLite cuando no
@@ -86,6 +86,7 @@ Ver [navegacion.md](../navegacion.md) para la tabla completa de rutas y guards.
 | Puerto (interfaz) | Adaptador (plugin Capacitor) | Permiso | Cuándo se pide | Si el usuario lo niega |
 |-------------------|------------------------------|---------|----------------|------------------------|
 | `CapturaFoto` | `@capacitor/camera` | Cámara | Al tocar "Tomar foto" en `/activos/:id/foto` | Mensaje con acceso a ajustes; el activo se guarda sin foto |
+| `ExportarActivosCsv` | `@capacitor/filesystem` + `@capacitor/share` | Ninguno (archivo en el directorio de caché privado de la app, compartido vía `FileProvider`) | Al tocar "CSV" en `/activos`, sin pedir permiso porque no usa almacenamiento externo | No aplica (sin permiso que negar); si falla la escritura o el share, se muestra "No se pudo exportar el CSV" |
 
 ---
 

@@ -20,4 +20,5 @@ export interface ActivosRepository {
   actualizar(id: string, datos: DatosEdicionActivo): Promise<Activo>;
   actualizarFoto(id: string, fotoUrl: string): Promise<Activo>;
   cambiarEstado(id: string, estado: EstadoActivo): Promise<Activo>;
+  exportarCsv(): Promise<string>;
 }

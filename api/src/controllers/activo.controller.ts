@@ -66,4 +66,15 @@ export const activoController = {
       next(err);
     }
   },
+
+  exportarCsv: async (_req: Request, res: Response, next: NextFunction) => {
+    try {
+      const csv = await activoService.exportarCsv();
+      res.setHeader("Content-Type", "text/csv; charset=utf-8");
+      res.setHeader("Content-Disposition", 'attachment; filename="inventario-activogo.csv"');
+      res.send(csv);
+    } catch (err) {
+      next(err);
+    }
+  },
 };

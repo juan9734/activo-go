@@ -1,4 +1,5 @@
 import { activoRepository } from "../repositories/activo.repository.js";
+import { filasACsv } from "../utils/csv.js";
 import type { $Enums } from "@prisma/client";
 
 type EstadoActivo = $Enums.EstadoActivo;
@@ -54,5 +55,19 @@ export const activoService = {
     const activo = await activoRepository.buscarPorId(id);
     if (!activo) throw error(404, "Activo no encontrado");
     return activoRepository.actualizarFoto(id, fotoUrl);
+  },
+
+  exportarCsv: async () => {
+    const activos = await activoRepository.listar();
+    const encabezados = ["codigo", "nombre", "categoria", "ubicacion", "estado", "responsable"];
+    const filas = activos.map((a) => [
+      a.codigo,
+      a.nombre,
+      a.categoria,
+      a.ubicacion ?? "",
+      a.estado,
+      a.responsable ?? "",
+    ]);
+    return filasACsv(encabezados, filas);
   },
 };

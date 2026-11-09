@@ -32,4 +32,9 @@ export class ActivosHttpRepository implements ActivosRepository {
     const { data } = await httpClient.patch(`/activos/${id}/estado`, { estado });
     return data as Activo;
   }
+
+  async exportarCsv(): Promise<string> {
+    const { data } = await httpClient.get('/activos/export.csv', { responseType: 'text' });
+    return data as string;
+  }
 }
