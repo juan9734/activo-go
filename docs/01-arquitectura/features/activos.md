@@ -1,8 +1,8 @@
 # Feature — Activos
 
 - **Responsable:** Juan Diego Ninco Collazos
-- **Estado:** Planeada
-- **Historias relacionadas:** HU-04, HU-05, HU-06, HU-07, HU-08, HU-11, HU-12, HU-13
+- **Estado:** MVP implementado y verificado en el emulador — ver [v1.0.0.md](../../05-release/releases/v1.0.0.md). HU-08 a HU-10, HU-12 y HU-13 quedan como brecha declarada.
+- **Historias relacionadas:** HU-04, HU-05, HU-06, HU-07, HU-08, HU-11, HU-12, HU-13, HU-15, HU-16
 
 ---
 
@@ -71,7 +71,7 @@ Ver [navegacion.md](../navegacion.md) para la tabla completa de rutas y guards.
 - **Casos de uso:** `ListarActivos`, `RegistrarActivo`, `CambiarEstadoActivo`,
   `AsignarActivo`, `ExportarActivosCsv`.
 - **Repositorios:** interfaz `ActivosRepository` en `domain/`; implementación `ActivosHttpRepository` en `data/`.
-- **Endpoints:** `GET/POST/PUT /activos`, `PATCH /activos/:id/estado`,
+- **Endpoints:** `GET/POST /activos`, `GET/PUT /activos/:id`, `PATCH /activos/:id/estado`,
   `POST /activos/:id/foto`, `POST /activos/:id/asignaciones`,
   `GET /activos/export.csv` — ver [03-api-y-datos/endpoints/](../../03-api-y-datos/endpoints/).
 - **Persistencia local:** entidad `activos` en caché (SQLite cifrada) — ver
