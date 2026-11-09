@@ -18,13 +18,28 @@ function error(status: number, message: string) {
 export const activoService = {
   listar: () => activoRepository.listar(),
 
-  crear: async (data: { codigo: string; nombre: string; categoria: string }) => {
+  obtener: async (id: string) => {
+    const activo = await activoRepository.buscarPorId(id);
+    if (!activo) throw error(404, "Activo no encontrado");
+    return activo;
+  },
+
+  crear: async (data: { codigo: string; nombre: string; categoria: string; ubicacion?: string }) => {
     const existente = await activoRepository.buscarPorCodigo(data.codigo);
     if (existente) throw error(409, "Ya existe un activo con ese código");
     return activoRepository.crear(data);
   },
 
-  cambiarEstado: async (id: string, estadoNuevo: EstadoActivo) => {
+  actualizar: async (
+    id: string,
+    data: { nombre: string; categoria: string; ubicacion?: string | null }
+  ) => {
+    const activo = await activoRepository.buscarPorId(id);
+    if (!activo) throw error(404, "Activo no encontrado");
+    return activoRepository.actualizar(id, data);
+  },
+
+  cambiarEstado: async (id: string, estadoNuevo: EstadoActivo, usuarioQueCambia: string) => {
     const activo = await activoRepository.buscarPorId(id);
     if (!activo) throw error(404, "Activo no encontrado");
 
@@ -32,7 +47,7 @@ export const activoService = {
     if (!permitidas.includes(estadoNuevo)) {
       throw error(422, `No se puede pasar de ${activo.estado} a ${estadoNuevo}`);
     }
-    return activoRepository.cambiarEstado(id, estadoNuevo);
+    return activoRepository.cambiarEstado(id, estadoNuevo, usuarioQueCambia);
   },
 
   actualizarFoto: async (id: string, fotoUrl: string) => {

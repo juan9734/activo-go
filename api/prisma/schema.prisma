@@ -46,15 +46,18 @@ model RefreshToken {
 }
 
 model Activo {
-  id           String       @id @default(uuid())
-  codigo       String       @unique
-  nombre       String
-  categoria    String
-  estado       EstadoActivo @default(ACTIVO)
-  responsable  String?
-  fotoUrl      String?
-  creadoEn     DateTime     @default(now())
-  actualizadoEn DateTime    @updatedAt
+  id                   String       @id @default(uuid())
+  codigo               String       @unique
+  nombre               String
+  categoria            String
+  ubicacion            String?
+  estado               EstadoActivo @default(ACTIVO)
+  responsable          String?
+  fotoUrl              String?
+  estadoActualizadoPor String?
+  estadoActualizadoEn  DateTime?
+  creadoEn             DateTime     @default(now())
+  actualizadoEn        DateTime     @updatedAt
 
   @@map("activos")
 }
