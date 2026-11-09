@@ -7,6 +7,7 @@ import ListaActivosPage from '../features/activos/presentation/ListaActivosPage'
 import DetalleActivoPage from '../features/activos/presentation/DetalleActivoPage';
 import CapturaFotoPage from '../features/activos/presentation/CapturaFotoPage';
 import FormularioActivoPage from '../features/activos/presentation/FormularioActivoPage';
+import EscanearQrPage from '../features/activos/presentation/EscanearQrPage';
 
 function AuthGuard({ children }: { children: ReactNode }) {
   const { usuario, cargandoInicial } = useSesion();
@@ -33,6 +34,14 @@ export function AppRoutes() {
         element={
           <AuthGuard>
             <FormularioActivoPage />
+          </AuthGuard>
+        }
+      />
+      <Route
+        path="/activos/escanear"
+        element={
+          <AuthGuard>
+            <EscanearQrPage />
           </AuthGuard>
         }
       />

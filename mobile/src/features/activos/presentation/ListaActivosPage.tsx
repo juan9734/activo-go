@@ -72,6 +72,9 @@ export default function ListaActivosPage() {
         <IonToolbar>
           <IonTitle>Activos ({usuario?.rol ?? '—'})</IonTitle>
           <IonButtons slot="end">
+            {(usuario?.rol === 'ADMIN' || usuario?.rol === 'AUDITOR') && (
+              <IonButton onClick={() => navigate('/activos/escanear')}>Escanear</IonButton>
+            )}
             {usuario?.rol === 'ADMIN' && (
               <IonButton onClick={onExportarCsv} disabled={exportando}>
                 {exportando ? <IonSpinner name="dots" /> : 'CSV'}
