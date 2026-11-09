@@ -85,7 +85,7 @@ export default function ListaActivosPage() {
         {(fase === 'cargado' || fase === 'offline') && activos.length > 0 && (
           <IonList>
             {activos.map((activo) => (
-              <IonItem key={activo.id} button onClick={() => navigate(`/activos/${activo.id}/foto`)}>
+              <IonItem key={activo.id} button onClick={() => navigate(`/activos/${activo.id}`)}>
                 <IonLabel>
                   <h2>
                     {activo.codigo} — {activo.nombre}

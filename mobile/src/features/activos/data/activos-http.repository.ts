@@ -1,6 +1,6 @@
 import { httpClient } from '../../../core/network/http-client';
 import type { Activo } from '../domain/activo';
-import type { ActivosRepository, DatosNuevoActivo } from '../domain/activos.repository';
+import type { ActivosRepository, DatosNuevoActivo, DatosEdicionActivo } from '../domain/activos.repository';
 
 export class ActivosHttpRepository implements ActivosRepository {
   async listar(): Promise<Activo[]> {
@@ -8,8 +8,18 @@ export class ActivosHttpRepository implements ActivosRepository {
     return data as Activo[];
   }
 
+  async obtener(id: string): Promise<Activo> {
+    const { data } = await httpClient.get(`/activos/${id}`);
+    return data as Activo;
+  }
+
   async crear(datos: DatosNuevoActivo): Promise<Activo> {
     const { data } = await httpClient.post('/activos', datos);
+    return data as Activo;
+  }
+
+  async actualizar(id: string, datos: DatosEdicionActivo): Promise<Activo> {
+    const { data } = await httpClient.put(`/activos/${id}`, datos);
     return data as Activo;
   }
 

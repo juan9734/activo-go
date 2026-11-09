@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { useSesion } from '../core/sesion/SesionContext';
 import LoginPage from '../features/auth/presentation/LoginPage';
 import ListaActivosPage from '../features/activos/presentation/ListaActivosPage';
+import DetalleActivoPage from '../features/activos/presentation/DetalleActivoPage';
 import CapturaFotoPage from '../features/activos/presentation/CapturaFotoPage';
 import FormularioActivoPage from '../features/activos/presentation/FormularioActivoPage';
 
@@ -36,10 +37,26 @@ export function AppRoutes() {
         }
       />
       <Route
+        path="/activos/:id/editar"
+        element={
+          <AuthGuard>
+            <FormularioActivoPage />
+          </AuthGuard>
+        }
+      />
+      <Route
         path="/activos/:id/foto"
         element={
           <AuthGuard>
             <CapturaFotoPage />
+          </AuthGuard>
+        }
+      />
+      <Route
+        path="/activos/:id"
+        element={
+          <AuthGuard>
+            <DetalleActivoPage />
           </AuthGuard>
         }
       />
