@@ -1,4 +1,4 @@
-import type { Activo } from './activo';
+import type { Activo, EstadoActivo } from './activo';
 
 export interface DatosNuevoActivo {
   codigo: string;
@@ -19,4 +19,5 @@ export interface ActivosRepository {
   crear(datos: DatosNuevoActivo): Promise<Activo>;
   actualizar(id: string, datos: DatosEdicionActivo): Promise<Activo>;
   actualizarFoto(id: string, fotoUrl: string): Promise<Activo>;
+  cambiarEstado(id: string, estado: EstadoActivo): Promise<Activo>;
 }

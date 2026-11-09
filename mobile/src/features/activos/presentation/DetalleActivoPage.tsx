@@ -17,9 +17,10 @@ import {
   IonText,
 } from '@ionic/react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { activosRepository } from '../../../core/di/composicion';
 import { useSesion } from '../../../core/sesion/SesionContext';
+import type { EstadoActivo } from '../domain/activo';
 
 const COLOR_ESTADO: Record<string, string> = {
   ACTIVO: 'success',
@@ -27,15 +28,36 @@ const COLOR_ESTADO: Record<string, string> = {
   BAJA: 'danger',
 };
 
+// Debe coincidir con TRANSICIONES_VALIDAS en api/src/services/activo.service.ts
+const TRANSICIONES_VALIDAS: Record<EstadoActivo, EstadoActivo[]> = {
+  ACTIVO: ['MANTENIMIENTO', 'BAJA'],
+  MANTENIMIENTO: ['ACTIVO', 'BAJA'],
+  BAJA: [],
+};
+
 export default function DetalleActivoPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { usuario } = useSesion();
+  const queryClient = useQueryClient();
 
   const { data: activo, isLoading, isError } = useQuery({
     queryKey: ['activos', id],
     queryFn: () => activosRepository.obtener(id as string),
   });
+
+  const cambiarEstado = useMutation({
+    mutationFn: (estado: EstadoActivo) => activosRepository.cambiarEstado(id as string, estado),
+    onSuccess: (activoActualizado) => {
+      queryClient.setQueryData(['activos', id], activoActualizado);
+      queryClient.invalidateQueries({ queryKey: ['activos'] });
+    },
+  });
+
+  function onCambiarEstado(estado: EstadoActivo) {
+    if (estado === 'BAJA' && !window.confirm('Dar de baja es irreversible. ¿Continuar?')) return;
+    cambiarEstado.mutate(estado);
+  }
 
   return (
     <IonPage>
@@ -110,6 +132,32 @@ export default function DetalleActivoPage() {
                 <IonButton expand="block" fill="outline" onClick={() => navigate(`/activos/${activo.id}/foto`)}>
                   {activo.fotoUrl ? 'Repetir foto' : 'Tomar foto'}
                 </IonButton>
+
+                {TRANSICIONES_VALIDAS[activo.estado].length > 0 && (
+                  <div className="ion-margin-top">
+                    <IonText color="medium">
+                      <p>Cambiar estado a:</p>
+                    </IonText>
+                    {TRANSICIONES_VALIDAS[activo.estado].map((destino) => (
+                      <IonButton
+                        key={destino}
+                        expand="block"
+                        fill="outline"
+                        color={COLOR_ESTADO[destino]}
+                        disabled={cambiarEstado.isPending}
+                        onClick={() => onCambiarEstado(destino)}
+                      >
+                        {destino}
+                      </IonButton>
+                    ))}
+                  </div>
+                )}
+
+                {cambiarEstado.isError && (
+                  <IonText color="danger">
+                    <p>No se pudo cambiar el estado.</p>
+                  </IonText>
+                )}
               </>
             )}
           </>
